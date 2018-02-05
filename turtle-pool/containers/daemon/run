@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker run -it --rm --name turtlepool-daemon -v $(pwd)/daemon-data:/daemon-data -p 11897:11897 -p 11898:11898 blakelapierre/turtlepool-daemon

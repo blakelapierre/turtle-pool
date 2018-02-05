@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker run -it --rm --name turtlepool-redis -v $(pwd)/redis-data:/data redis:alpine

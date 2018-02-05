@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -rf static-html
+cp -R ../../website static-html/
+
+docker build . -t blakelapierre/turtlepool-www

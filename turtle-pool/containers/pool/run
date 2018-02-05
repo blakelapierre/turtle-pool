@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker run -it --rm --name turtlepool-pool --link turtlepool-daemon --link turtlepool-wallet --link turtlepool-redis -p 8117:8117 -p 3333:3333 blakelapierre/turtlepool-pool
