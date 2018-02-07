@@ -1,8 +1,8 @@
-var api = "http://localhost:8117";
+var api = "http://"+window.location.hostname+":8117";
 
-var api_blockexplorer = "http://localhost:1118";
+var api_blockexplorer = "http://"+window.location.hostname+":1118";
 
-var poolHost = "localhost";
+var poolHost = window.location.hostname;
 
 var irc = "";
 

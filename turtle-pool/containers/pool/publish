@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker push blakelapierre/turtlepool-base
+docker push blakelapierre/turtlepool-pool
