@@ -188,11 +188,14 @@ function getCoinPrice(callback) {
         if (error) callback(error);
         callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
 
-        const {buy} = JSON.parse(body.toString());
+        var buy = JSON.parse(body.toString()).buy;
 
-        const prices = Object.keys(buy).map(key => {
-          const [f, s] = key.split('.'),
-                satoshis = parseInt(f) * 100000000 + parseInt(s);
+        var prices = Object.keys(buy).map(function (key) {
+          var parts = key.split('.'),
+              f = parts[0],
+              s = parts[1],
+            satoshis = parseInt(f) * 100000000 + parseInt(s);
+
           return satoshis;
         });
 
