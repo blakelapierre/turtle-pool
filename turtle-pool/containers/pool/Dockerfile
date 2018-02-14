@@ -4,11 +4,11 @@ RUN apt-get update && apt-get install -y git build-essential redis-server libboo
 
 RUN git clone https://github.com/blakelapierre/turtle-pool
 
-RUN cd turtle-pool && npm update
+RUN cd turtle-pool/turtle-pool && npm update
 
 EXPOSE 8117
 EXPOSE 3333
 
-ADD config.json /turtle-pool/config.json
+ADD config.json /turtle-pool/turtle-pool/config.json
 
 CMD cd turtle-pool/turtle-pool && node init.js
