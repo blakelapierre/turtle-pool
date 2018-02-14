@@ -184,7 +184,7 @@ function collectUsersHashrate(chartName, settings) {
 }
 
 function getCoinPrice(callback) {
-    apiInterfaces.jsonHttpRequest('https://tradeogre.com', 443, function(error, response) {
+    apiInterfaces.jsonHttpRequest('tradeogre.com', 443, function(error, response) {
         if (error) callback(error);
         callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
 
