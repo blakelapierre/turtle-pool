@@ -184,9 +184,28 @@ function collectUsersHashrate(chartName, settings) {
 }
 
 function getCoinPrice(callback) {
-    apiInterfaces.jsonHttpRequest('api.cryptonator.com', 443, '', function(error, response) {
+    apiInterfaces.jsonHttpRequest('https://tradeogre.com', 443, function(error, response) {
+        if (error) callback(error);
         callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
-    }, '/api/ticker/' + config.symbol.toLowerCase() + '-usd');
+
+        const {buy} = JSON.parse(body.toString());
+
+        const prices = Object.keys(buy).map(key => {
+          const [f, s] = key.split('.'),
+                satoshis = parseInt(f) * 100000000 + parseInt(s);
+          return satoshis;
+        });
+
+        prices.sort().reverse();
+
+        if (prices.length > 0) callback(undefined, prices[0]);
+        else callback('no price on tradeogre!');
+
+    }, '/api/v1/orders/BTC-TRTL');
+
+    // apiInterfaces.jsonHttpRequest('api.cryptonator.com', 443, '', function(error, response) {
+    //     callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
+    // }, '/api/ticker/' + config.symbol.toLowerCase() + '-usd');
 }
 
 function getCoinProfit(callback) {
