@@ -188,7 +188,7 @@ function getCoinPrice(callback) {
         if (error) callback(error);
         callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
 
-        var buy = JSON.parse(body.toString()).buy;
+        var buy = response.buy;
 
         var prices = Object.keys(buy).map(function (key) {
           var parts = key.split('.'),
