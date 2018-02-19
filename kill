@@ -3,5 +3,5 @@
 docker kill turtlepool-redis
 docker kill turtlepool-daemon
 docker kill turtlepool-wallet
-docker kill tutlepool-pool
+docker kill tutrlepool-pool
 docker kill turtlepool-www
