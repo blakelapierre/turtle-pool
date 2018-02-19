@@ -1,0 +1,7 @@
+#!/bin/sh
+
+docker pull redis:alpine && \
+docker pull blakelapierre/turtlepool-daemon && \
+docker pull blakelapierre/turtlepool-wallet && \
+docker pull blakelapierre/turtlepool-pool && \
+docker pull blakelapierre/turtlepool-www

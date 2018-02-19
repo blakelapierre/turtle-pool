@@ -74,13 +74,13 @@ function runInterval(){
             var addresses = 0;
             var commandAmount = 0;
             var commandIndex = 0;
-			
+
             for (var worker in payments){
                 var amount = parseInt(payments[worker]);
 				if(config.payments.maxTransactionAmount && amount + commandAmount > config.payments.maxTransactionAmount) {
 		            amount = config.payments.maxTransactionAmount - commandAmount;
 	            }
-				
+
 				if(!transferCommands[commandIndex]) {
 					transferCommands[commandIndex] = {
 						redis: [],
@@ -93,7 +93,7 @@ function runInterval(){
 						}
 					};
 				}
-				
+
                 transferCommands[commandIndex].rpc.destinations.push({amount: amount, address: worker});
                 transferCommands[commandIndex].redis.push(['hincrby', config.coin + ':workers:' + worker, 'balance', -amount]);
                 transferCommands[commandIndex].redis.push(['hincrby', config.coin + ':workers:' + worker, 'paid', amount]);
