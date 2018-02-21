@@ -4,4 +4,4 @@ docker run -d --rm --name turtlepool-redis -v $(pwd)/redis-data:/data redis:alpi
 docker run -d --rm --name turtlepool-daemon -v $(pwd)/daemon-data:/daemon-data blakelapierre/turtlepool-daemon
 docker run -d --rm --name turtlepool-wallet --link turtlepool-daemon -v $(pwd)/wallet-data:/wallet-data blakelapierre/turtlepool-wallet
 docker run -d --rm --name turtlepool-www -p 80:80 blakelapierre/turtlepool-www
-sleep 60 && docker run -d --rm --name turtlepool-pool --link turtlepool-redis --link turtlepool-daemon --link turtlepool-wallet -p 8117:8117 -p 3333:3333 -p 9999:9999 blakelapierre/turtlepool-pool
+sleep 5 && docker run -d --rm --name turtlepool-pool --link turtlepool-redis --link turtlepool-daemon --link turtlepool-wallet -p 8117:8117 -p 3333:3333 -p 9999:9999 blakelapierre/turtlepool-pool
