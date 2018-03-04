@@ -10,14 +10,7 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 $IPTABLES -t nat -F
 
 # tcpproxy LOCAL_IP LOCAL_PORT REMOTE_IP REMOTE_PORT
-function tcpproxy {
+
 $IPTABLES -t nat -A PREROUTING --dst $1 -p tcp --dport $2 -j DNAT --to-destination $3:$4
 $IPTABLES -t nat -A POSTROUTING --dst $3 -p tcp --dport $4 -j SNAT --to-source $1
 $IPTABLES -t nat -A OUTPUT --dst $1 -p tcp --dport $2 -j DNAT --to-destination $3:$4
-}
-
-# Example 1
-tcpproxy 192.168.40.244 3200 10.10.10.2 3200
-
-# Example 2
-tcpproxy 192.168.40.245 3200 192.168.1.30 3200
