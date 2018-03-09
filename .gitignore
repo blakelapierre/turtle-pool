@@ -2,3 +2,4 @@ turtle-pool/containers/daemon/daemon-data
 turtle-pool/containers/wallet/wallet-data
 turtle-pool/containers/redis/redis-data
 turtle-pool/containers/www/static-html
+turtle-pool/containers/pool/config.json
