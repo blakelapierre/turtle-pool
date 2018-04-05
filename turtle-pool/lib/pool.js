@@ -17,12 +17,14 @@ require('./exceptionWriter.js')(logSystem);
 
 var apiInterfaces = require('./apiInterfaces.js')(config.daemon, config.wallet, config.api);
 var utils = require('./utils.js');
+Buffer.prototype.toByteArray = function () {return Array.prototype.slice.call(this, 0)}
 
 var log = function(severity, system, text, data){
     global.log(severity, system, threadId + text, data);
 };
 
 var cryptoNight = multiHashing['cryptonight'];
+var cryptoNightLite = multiHashing['cryptonight-lite'];
 
 var diff1 = bignum('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', 16);
 
@@ -283,8 +285,7 @@ Miner.prototype = {
         diffBuff.copy(padded, 32 - diffBuff.length);
 
         var buff = padded.slice(0, 4);
-        var buffArray = buff.toJSON();
-        buffArray.reverse();
+        var buffArray = buff.toByteArray().reverse();
         var buffReversed = new Buffer(buffArray);
         this.target = buffReversed.readUInt32BE(0);
         var hex = buffReversed.toString('hex');
@@ -326,12 +327,12 @@ Miner.prototype = {
     },
     checkBan: function(validShare){
         if (!banningEnabled) return;
-        
+
         // Init global per-IP shares stats
         if (!perIPStats[this.ip]){
             perIPStats[this.ip] = { validShares: 0, invalidShares: 0 };
         }
-        
+
         var stats = perIPStats[this.ip];
         validShare ? stats.validShares++ : stats.invalidShares++;
         if (stats.validShares + stats.invalidShares >= config.poolServer.banning.checkThreshold){
@@ -357,7 +358,7 @@ function recordShareData(miner, job, shareDiff, blockCandidate, hashHex, shareTy
     var dateNowSeconds = dateNow / 1000 | 0;
 
     //Weighting older shares lower than newer ones to prevent pool hopping
-    if (config.poolServer.slushMining.enabled) {                
+    if (config.poolServer.slushMining.enabled) {
         if (lastChecked + config.poolServer.slushMining.lastBlockCheckRate <= dateNowSeconds || lastChecked == 0) {
             redisClient.hget(config.coin + ':stats', 'lastBlockFound', function(error, result) {
                 if (error) {
@@ -368,7 +369,7 @@ function recordShareData(miner, job, shareDiff, blockCandidate, hashHex, shareTy
                 lastChecked = dateNowSeconds;
             });
         }
-        
+
         job.score = job.difficulty * Math.pow(Math.E, ((scoreTime - dateNowSeconds) / config.poolServer.slushMining.weight)); //Score Calculation
         log('info', logSystem, 'Submitted score ' + job.score + ' with difficulty ' + job.difficulty + ' and the time ' + scoreTime);
     }
@@ -433,7 +434,12 @@ function processShare(miner, job, blockTemplate, nonce, resultHash){
     }
     else {
         convertedBlob = cnUtil.convert_blob(shareBuffer);
-        hash = cryptoNight(convertedBlob);
+        if (shareBuffer[0] >= 4) {
+            hash = cryptoNightLite(convertedBlob, 1);
+        }
+        else {
+            hash = cryptoNight(convertedBlob);
+        }
         shareType = 'valid';
     }
 
@@ -443,8 +449,7 @@ function processShare(miner, job, blockTemplate, nonce, resultHash){
         return false;
     }
 
-    var hashArray = hash.toJSON();
-    hashArray.reverse();
+    var hashArray = hash.toByteArray().reverse();
     var hashNum = bignum.fromBuffer(new Buffer(hashArray));
     var hashDiff = diff1.div(hashNum);
 
@@ -589,7 +594,7 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
 
             var shareAccepted = processShare(miner, job, blockTemplate, params.nonce, params.result);
             miner.checkBan(shareAccepted);
-            
+
             if (shareTrustEnabled){
                 if (shareAccepted){
                     miner.trust.probability -= shareTrustStepFloat;
@@ -604,7 +609,7 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
                     miner.trust.penalty = config.poolServer.shareTrust.penalty;
                 }
             }
-			
+
 			if (!shareAccepted){
                 sendReply('Low difficulty share');
                 return;
@@ -618,9 +623,12 @@ function handleMinerMethod(method, params, ip, portData, sendReply, pushMessage)
             sendReply(null, {status: 'OK'});
             break;
         case 'keepalived' :
+            if (!miner) {
+                sendReply('Unauthenticated');
+                return;
+            }
             miner.heartbeat()
-            sendReply(null, { status:'KEEPALIVED'
-            });
+            sendReply(null, { status:'KEEPALIVED' });
             break;
         default:
             sendReply("invalid method");

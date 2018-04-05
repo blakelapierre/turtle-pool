@@ -162,7 +162,8 @@ function getNetworkDifficulty(callback) {
 }
 
 function getUsersHashrates(callback) {
-    apiInterfaces.pool('/miners_hashrate', function(error, data) {
+    var method = '/miners_hashrate?password=' + config.api.password;
+    apiInterfaces.pool(method, function(error, data) {
         callback(data.minersHashrate);
     });
 }
@@ -184,31 +185,9 @@ function collectUsersHashrate(chartName, settings) {
 }
 
 function getCoinPrice(callback) {
-    apiInterfaces.jsonHttpRequest('tradeogre.com', 443, '', function(error, response) {
-        if (error) callback(error);
+    apiInterfaces.jsonHttpRequest('api.cryptonator.com', 443, '', function(error, response) {
         callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
-
-        var buy = response.buy;
-
-        var prices = Object.keys(buy).map(function (key) {
-          var parts = key.split('.'),
-              f = parts[0],
-              s = parts[1],
-            satoshis = parseInt(f) * 100000000 + parseInt(s);
-
-          return satoshis;
-        });
-
-        prices.sort().reverse();
-
-        if (prices.length > 0) callback(undefined, prices[0]);
-        else callback('no price on tradeogre!');
-
-    }, '/api/v1/orders/BTC-TRTL');
-
-    // apiInterfaces.jsonHttpRequest('api.cryptonator.com', 443, '', function(error, response) {
-    //     callback(response.error ? response.error : error, response.success ? +response.ticker.price : null);
-    // }, '/api/ticker/' + config.symbol.toLowerCase() + '-usd');
+    }, '/api/ticker/' + config.symbol.toLowerCase() + '-usd');
 }
 
 function getCoinProfit(callback) {

@@ -1,10 +1,10 @@
-var api = "http://"+window.location.hostname+":8117";
+var api = "http://poolhost.com:1117";
 
-var api_blockexplorer = "http://"+window.location.hostname+":1118";
+var api_blockexplorer = "http://daemonhost.com:1118";
 
-var poolHost = window.location.hostname;
+var poolHost = "poolhost.com";
 
-var irc = "";
+var irc = "irc.freenode.net/#poolhost";
 
 var email = "support@poolhost.com";
 

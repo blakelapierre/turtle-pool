@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM node:0.10
 
 RUN apt-get update && apt-get install -y git build-essential redis-server libboost1.55-all-dev nodejs-dev nodejs-legacy npm cmake libssl-dev
 

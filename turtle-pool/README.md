@@ -1,5 +1,6 @@
-cryptonote-forknote-pool
+turtle-pool
 ====================
+Formerly known as cryptonote-forknote-pool, forked from Forknote Project.
 
 High performance Node.js (with native C addons) mining pool for Cryptonote based coins, created with the Forknote software such as Bytecoin, Dashcoin, etc..
 
@@ -108,17 +109,17 @@ you are using - a good place to start with redis is [data persistence](http://re
 Installing pool on different Linux distributives is different because it depends on system default components and versions. For now the easiest way to install pool is to use Ubuntu 14 LTS. Thus, all you had to do in order to prepare Ubunty 14 for pool installation is to run:
 
 ```bash
-sudo apt-get install git build-essential redis-server libboost1.55-all-dev nodejs-dev nodejs-legacy npm cmake libssl-dev
+sudo apt-get install git build-essential redis-server libboost1.55-all-dev nodejs-dev nodejs-legacy npm cmake libssl-dev node-gyp
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
 
 
 #### 1) Downloading & Installing
 
-
 Clone the repository and run `npm update` for all the dependencies to be installed:
 
 ```bash
-git clone https://github.com/forknote/cryptonote-universal-pool.git pool
+git clone https://github.com/turtlecoin/turtle-pool pool
 cd pool
 npm update
 ```
@@ -294,7 +295,8 @@ Explanation for each field:
 /* Wallet daemon connection details. */
 "wallet": {
     "host": "127.0.0.1",
-    "port": 29082
+    "port": 29082,
+    "password": "<replace with rpc password>"
 },
 
 /* Redis connection into. */

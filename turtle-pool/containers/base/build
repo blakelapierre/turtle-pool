@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build . -t blakelapierre/turtlepool-base
+docker build . -t blakelapierre/turtlepool-base  --no-cache
